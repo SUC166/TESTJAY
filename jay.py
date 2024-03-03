@@ -1,6 +1,9 @@
 import streamlit as st
 import openai
+from gtts import gTTS
+from io import BytesIO
 
+sound_file = BytesIO()
 # Initialize SessionState
 if "page" not in st.session_state:
     st.session_state.page = {"name": "Jayden", "prompt": []}
@@ -83,7 +86,9 @@ if question:  # Someone has asked a question
         if text is not None:
             response.append(text)
             result = "".join(response).strip()
-
+            tts = gTTS(response, lang='en')
+            tts.write_to_fp(sound_file)
+            st.audio(sound_file)
             # Let us update the Bot's answer with the new chunk
             botmsg.write(result)
 
